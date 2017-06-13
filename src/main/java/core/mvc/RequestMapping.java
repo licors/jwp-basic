@@ -8,6 +8,12 @@ import org.slf4j.LoggerFactory;
 
 import next.controller.CreateUserController;
 import next.controller.HomeController;
+import next.controller.ListUserController;
+import next.controller.LoginController;
+import next.controller.LogoutController;
+import next.controller.ProfileController;
+import next.controller.UpdateFormUserController;
+import next.controller.UpdateUserController;
 
 public class RequestMapping {
 	private static final Logger logger = LoggerFactory.getLogger(RequestMapping.class);
@@ -15,10 +21,16 @@ public class RequestMapping {
 	
 	void initMapping() {
 		mappings.put("/", new HomeController());
+		mappings.put("/users", new ListUserController());
 		mappings.put("/users/form", new ForwardController("/user/form.jsp"));
 		mappings.put("/users/loginForm", new ForwardController("/user/login.jsp"));
 		mappings.put("/users/create", new CreateUserController());
-		//다른 컨트롤러 들 추가하라
+		mappings.put("/users/login", new LoginController());
+		mappings.put("/users/logout", new LogoutController());
+		mappings.put("/users/profile", new ProfileController());
+		mappings.put("/users/updateForm", new UpdateFormUserController());
+		mappings.put("/users/update", new UpdateUserController());
+		
 		logger.info("Initialized Request Mapping!");
 	}
 	
