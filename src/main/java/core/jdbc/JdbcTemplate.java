@@ -9,40 +9,29 @@ import java.util.List;
 
 public class JdbcTemplate {
 	
-	public void update(String query , PreparedStatementSetter pss) throws SQLException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        try {
-        	con = ConnectionManager.getConnection();
-        	String sql = query;
-        	pstmt = con.prepareStatement(sql);
-        	pss.setValues(pstmt);
-        	pstmt.executeUpdate();
-        } finally {
-            if (pstmt != null) {
-                pstmt.close();
-            }
-            if (con != null) {
-                con.close();
-            }
+	public void update(String query , PreparedStatementSetter pss) throws DataAccessException {
+        try(Connection con = ConnectionManager.getConnection(); 
+        	PreparedStatement pstmt = con.prepareStatement(query);) {
+	        	pss.setValues(pstmt);
+	        	pstmt.executeUpdate();
+        } catch(SQLException e) {
+        	throw new DataAccessException(e);
         }
     }
 	
-	public Object queryForObject(String query, PreparedStatementSetter pss, RowMapper rm) throws SQLException {
-        List results = query(query, pss, rm);
-        if(results.isEmpty())
+	public Object queryForObject(String query, PreparedStatementSetter pss, RowMapper rm) {
+        List results = null;
+		results = query(query, pss, rm);
+		if(results.isEmpty())
         	return null;
         return results.get(0);
     }
 	
-	public List query(String query, PreparedStatementSetter pss, RowMapper rm) throws SQLException {
-		Connection con = null;
-        PreparedStatement pstmt = null;
+	public List query(String query, PreparedStatementSetter pss, RowMapper rm) throws DataAccessException {
         ResultSet rs = null;
-        try {
-            con = ConnectionManager.getConnection();
-            String sql = query;
-            pstmt = con.prepareStatement(sql);
+        try(Connection con = ConnectionManager.getConnection();
+        		PreparedStatement pstmt = con.prepareStatement(query); ) {
+        	
             pss.setValues(pstmt);
             rs = pstmt.executeQuery();
             
@@ -52,19 +41,17 @@ public class JdbcTemplate {
         	}
             return result;
             
+        } catch(SQLException e) {
+        	throw new DataAccessException(e);
         } finally {
             if (rs != null) {
-                rs.close();
-            }
-            if (pstmt != null) {
-                pstmt.close();
-            }
-            if (con != null) {
-                con.close();
+                try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					throw new DataAccessException(e);
+				}
             }
         }
 	}
-	
-	
-	
 }
