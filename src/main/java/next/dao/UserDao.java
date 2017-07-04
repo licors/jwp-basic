@@ -17,28 +17,22 @@ public class UserDao {
     	JdbcTemplate insertJdbcTemplate = new JdbcTemplate() {
 			
 			@Override
-			protected void setValues(User user, PreparedStatement pstmt) throws SQLException {
+			protected void setValues(PreparedStatement pstmt) throws SQLException {
 				// TODO Auto-generated method stub
 				pstmt.setString(1, user.getUserId());
 		        pstmt.setString(2, user.getPassword());
 		        pstmt.setString(3, user.getName());
 		        pstmt.setString(4, user.getEmail()); 
 			}
-			
-			@Override
-			protected String createQuery() {
-				// TODO Auto-generated method stub
-				return "INSERT INTO USERS VALUES (?, ?, ?, ?)";
-			}
 		};
-		insertJdbcTemplate.update(user);
+		insertJdbcTemplate.update("INSERT INTO USERS VALUES (?, ?, ?, ?)");
     }
     
     public void update(User user) throws SQLException {
         JdbcTemplate updateJdbcTemplate = new JdbcTemplate() {
 			
 			@Override
-			protected void setValues(User user, PreparedStatement pstmt) throws SQLException {
+			protected void setValues(PreparedStatement pstmt) throws SQLException {
 				// TODO Auto-generated method stub
 				pstmt.setString(1, user.getUserId());
 		    	pstmt.setString(2, user.getPassword());
@@ -46,14 +40,8 @@ public class UserDao {
 		    	pstmt.setString(4, user.getEmail());
 		    	pstmt.setString(5, user.getUserId());
 			}
-			
-			@Override
-			protected String createQuery() {
-				// TODO Auto-generated method stub
-				return "UPDATE USERS SET userId = ?, password = ?, name = ?, email = ? WHERE userId = ?";
-			}
 		};
-		updateJdbcTemplate.update(user);
+		updateJdbcTemplate.update("UPDATE USERS SET userId = ?, password = ?, name = ?, email = ? WHERE userId = ?");
     }
 
     public List<User> findAll() throws SQLException {
