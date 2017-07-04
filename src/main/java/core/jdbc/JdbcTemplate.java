@@ -6,15 +6,15 @@ import java.sql.SQLException;
 
 import next.model.User;
 
-public abstract class UpdateJdbcTemplate {
+public abstract class JdbcTemplate {
 	public void update(User user) throws SQLException {
         Connection con = null;
         PreparedStatement pstmt = null;
         try {
         	con = ConnectionManager.getConnection();
-        	String sql = createQueryforUpdate();
+        	String sql = createQuery();
         	pstmt = con.prepareStatement(sql);
-        	setValueForUpdate(user, pstmt);
+        	setValues(user, pstmt);
         	pstmt.executeUpdate();
         } finally {
             if (pstmt != null) {
@@ -26,6 +26,6 @@ public abstract class UpdateJdbcTemplate {
         }
     }
 
-	abstract protected void setValueForUpdate(User user, PreparedStatement pstmt) throws SQLException;
-	abstract protected String createQueryforUpdate();
+	abstract protected void setValues(User user, PreparedStatement pstmt) throws SQLException;
+	abstract protected String createQuery();
 }

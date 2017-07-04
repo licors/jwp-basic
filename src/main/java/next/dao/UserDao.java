@@ -9,16 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.jdbc.ConnectionManager;
-import core.jdbc.InsertJdbcTemplate;
-import core.jdbc.UpdateJdbcTemplate;
+import core.jdbc.JdbcTemplate;
 import next.model.User;
 
 public class UserDao {
     public void insert(User user) throws SQLException {
-        InsertJdbcTemplate insertJdbcTemplate = new InsertJdbcTemplate() {
+    	JdbcTemplate insertJdbcTemplate = new JdbcTemplate() {
 			
 			@Override
-			protected void setValuesForInsert(User user, PreparedStatement pstmt) throws SQLException {
+			protected void setValues(User user, PreparedStatement pstmt) throws SQLException {
 				// TODO Auto-generated method stub
 				pstmt.setString(1, user.getUserId());
 		        pstmt.setString(2, user.getPassword());
@@ -27,19 +26,19 @@ public class UserDao {
 			}
 			
 			@Override
-			protected String createQueryForInsert() {
+			protected String createQuery() {
 				// TODO Auto-generated method stub
 				return "INSERT INTO USERS VALUES (?, ?, ?, ?)";
 			}
 		};
-		insertJdbcTemplate.insert(user);
+		insertJdbcTemplate.update(user);
     }
     
     public void update(User user) throws SQLException {
-        UpdateJdbcTemplate updateJdbcTemplate = new UpdateJdbcTemplate() {
+        JdbcTemplate updateJdbcTemplate = new JdbcTemplate() {
 			
 			@Override
-			protected void setValueForUpdate(User user, PreparedStatement pstmt) throws SQLException {
+			protected void setValues(User user, PreparedStatement pstmt) throws SQLException {
 				// TODO Auto-generated method stub
 				pstmt.setString(1, user.getUserId());
 		    	pstmt.setString(2, user.getPassword());
@@ -49,7 +48,7 @@ public class UserDao {
 			}
 			
 			@Override
-			protected String createQueryforUpdate() {
+			protected String createQuery() {
 				// TODO Auto-generated method stub
 				return "UPDATE USERS SET userId = ?, password = ?, name = ?, email = ? WHERE userId = ?";
 			}
