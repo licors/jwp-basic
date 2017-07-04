@@ -53,10 +53,10 @@ public class UserDao {
 				
 			}
 		};
-    	RowMapper rm = new RowMapper() {
+    	RowMapper<User> rm = new RowMapper<User>() {
 
 			@Override
-			public Object mapRow(ResultSet rs) throws SQLException {
+			public User mapRow(ResultSet rs) throws SQLException {
 				// TODO Auto-generated method stub
 				return new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
         				rs.getString("email"));
@@ -79,10 +79,10 @@ public class UserDao {
 			}
 		};
 		
-		RowMapper rm = new RowMapper() {
+		RowMapper<User> rm = new RowMapper<User>() {
 			
 			@Override
-			public Object mapRow(ResultSet rs) throws SQLException {
+			public User mapRow(ResultSet rs) throws SQLException {
 				// TODO Auto-generated method stub
 				return new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
 		                rs.getString("email"));
