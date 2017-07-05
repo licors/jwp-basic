@@ -21,6 +21,7 @@ public class UserDaoTest {
         DatabasePopulatorUtils.execute(populator, ConnectionManager.getDataSource());
     }
 
+    // insert, update 가변인자 받아서 쿼리에 인자 전달하도록 구현
     @Test
     public void crud() throws Exception {
         User expected = new User("userId", "password", "name", "javajigi@email.com");
@@ -34,8 +35,7 @@ public class UserDaoTest {
         actual = userDao.findByUserId(expected.getUserId());
         assertEquals(expected, actual);
     }
-
-    // inser2, update2 가변인자 받아서 처리하도록 구현
+    // 콜백 인터페이스를 통해 쿼리에 인자 전달하도록 구현
     @Test
     public void crud2() throws Exception {
         User expected = new User("userId", "password", "name", "javajigi@email.com");

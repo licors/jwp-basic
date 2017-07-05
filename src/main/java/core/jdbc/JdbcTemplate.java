@@ -20,25 +20,20 @@ public class JdbcTemplate {
         }
     }
 	
-	public void update2(String query, Object... parameters) throws DataAccessException {
-        try(Connection con = ConnectionManager.getConnection(); 
-        		PreparedStatement pstmt = con.prepareStatement(query);) {
-        		
-        	for(int i=0; i < parameters.length; i++) {
-        		pstmt.setObject(i+1, parameters[i]);
-        	}
-    	    pstmt.executeUpdate();
-	    } catch(SQLException e) {
-	    	throw new DataAccessException(e);
-	    }
+	public void update(String query, Object...parameters) {
+		update(query, createPreparedStatementSetter(parameters));
 	}
-	
+
 	public <T> T queryForObject(String query, PreparedStatementSetter pss, RowMapper<T> rm) {
         List<T> results = query(query, pss, rm);
 		if(results.isEmpty())
         	return null;
         return results.get(0);
     }
+	
+	public <T> T queryForObject(String query, RowMapper<T> rm, Object...parameters) {
+		return queryForObject(query, createPreparedStatementSetter(parameters), rm);
+	}
 	
 	public <T> List<T> query(String query, PreparedStatementSetter pss, RowMapper<T> rm) throws DataAccessException {
         ResultSet rs = null;
@@ -66,5 +61,23 @@ public class JdbcTemplate {
 				}
             }
         }
+	}
+	
+	public <T> List<T> query(String query, RowMapper<T> rm, Object...parameters) {
+		return query(query, createPreparedStatementSetter(parameters), rm);
+	}
+	
+	private PreparedStatementSetter createPreparedStatementSetter(Object...parameters) {
+		// TODO Auto-generated method stub
+		return new PreparedStatementSetter() {
+			
+			@Override
+			public void setValues(PreparedStatement pstmt) throws SQLException {
+				// TODO Auto-generated method stub
+	        	for(int i=0; i < parameters.length; i++) {
+	        		pstmt.setObject(i+1, parameters[i]);
+	        	}
+			}
+		};
 	}
 }
