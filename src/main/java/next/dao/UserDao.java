@@ -11,7 +11,7 @@ import core.jdbc.RowMapper;
 import next.model.User;
 
 public class UserDao {
-    public void insert(User user) throws SQLException {
+    public void insert(User user) {
     	PreparedStatementSetter pss = new PreparedStatementSetter() {
 			
 			@Override
@@ -27,7 +27,13 @@ public class UserDao {
 		insertJdbcTemplate.update("INSERT INTO USERS VALUES (?, ?, ?, ?)", pss);
     }
     
-    public void update(User user) throws SQLException {
+    public void insert2(User user) {
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate();
+    	String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?)";
+    	jdbcTemplate.update2(sql, user.getUserId(), user.getPassword(), user.getName(), user.getEmail());
+    }
+    
+    public void update(User user) {
     	PreparedStatementSetter pss = new PreparedStatementSetter() {
 			
 			@Override
@@ -44,13 +50,18 @@ public class UserDao {
 		updateJdbcTemplate.update("UPDATE USERS SET userId = ?, password = ?, name = ?, email = ? WHERE userId = ?", pss);
     }
 
-    public List<User> findAll() throws SQLException {
+    public void update2(User user) {
+    	JdbcTemplate jdbcTemplate = new JdbcTemplate();
+    	String sql = "UPDATE USERS SET userId = ?, password = ?, name = ?, email = ? WHERE userId = ?";
+    	jdbcTemplate.update2(sql, user.getUserId(), user.getPassword(), user.getName(), user.getEmail(), user.getUserId());
+    }
+    
+    public List<User> findAll() {
     	PreparedStatementSetter pss = new PreparedStatementSetter() {
 			
 			@Override
 			public void setValues(PreparedStatement pstmt) throws SQLException {
 				// TODO Auto-generated method stub
-				
 			}
 		};
     	RowMapper<User> rm = new RowMapper<User>() {
@@ -69,7 +80,7 @@ public class UserDao {
    
     
 
-    public User findByUserId(String userId) throws SQLException {
+    public User findByUserId(String userId) {
     	PreparedStatementSetter pss = new PreparedStatementSetter() {
 			
 			@Override
@@ -84,8 +95,7 @@ public class UserDao {
 			@Override
 			public User mapRow(ResultSet rs) throws SQLException {
 				// TODO Auto-generated method stub
-				return new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
-		                rs.getString("email"));
+				return new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"), rs.getString("email"));
 			}
 		};
         JdbcTemplate selectJdbcTemplate = new JdbcTemplate();

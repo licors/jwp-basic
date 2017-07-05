@@ -11,13 +11,27 @@ public class JdbcTemplate {
 	
 	public void update(String query , PreparedStatementSetter pss) throws DataAccessException {
         try(Connection con = ConnectionManager.getConnection(); 
-        	PreparedStatement pstmt = con.prepareStatement(query);) {
-	        	pss.setValues(pstmt);
-	        	pstmt.executeUpdate();
+        		PreparedStatement pstmt = con.prepareStatement(query);) {
+        	
+        	pss.setValues(pstmt);
+        	pstmt.executeUpdate();
         } catch(SQLException e) {
         	throw new DataAccessException(e);
         }
     }
+	
+	public void update2(String query, Object... parameters) throws DataAccessException {
+        try(Connection con = ConnectionManager.getConnection(); 
+        		PreparedStatement pstmt = con.prepareStatement(query);) {
+        		
+        	for(int i=0; i < parameters.length; i++) {
+        		pstmt.setObject(i+1, parameters[i]);
+        	}
+    	    pstmt.executeUpdate();
+	    } catch(SQLException e) {
+	    	throw new DataAccessException(e);
+	    }
+	}
 	
 	public <T> T queryForObject(String query, PreparedStatementSetter pss, RowMapper<T> rm) {
         List<T> results = query(query, pss, rm);

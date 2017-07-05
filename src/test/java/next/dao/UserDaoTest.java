@@ -35,6 +35,21 @@ public class UserDaoTest {
         assertEquals(expected, actual);
     }
 
+    // inser2, update2 가변인자 받아서 처리하도록 구현
+    @Test
+    public void crud2() throws Exception {
+        User expected = new User("userId", "password", "name", "javajigi@email.com");
+        UserDao userDao = new UserDao();
+        userDao.insert2(expected);
+        User actual = userDao.findByUserId(expected.getUserId());
+        assertEquals(expected, actual);
+
+        expected.update(new User("userId", "password2", "name2", "sanjigi@email.com"));
+        userDao.update2(expected);
+        actual = userDao.findByUserId(expected.getUserId());
+        assertEquals(expected, actual);
+    }
+    
     @Test
     public void findAll() throws Exception {
         UserDao userDao = new UserDao();
